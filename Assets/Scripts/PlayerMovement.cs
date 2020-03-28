@@ -50,7 +50,6 @@ public class PlayerMovement : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		// Move our character
 		controller.Move(crouch, jump);
 		jump = false;
 	}

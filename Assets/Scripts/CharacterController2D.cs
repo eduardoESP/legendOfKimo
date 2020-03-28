@@ -42,14 +42,10 @@ public class CharacterController2D : MonoBehaviour
 			OnCrouchEvent = new BoolEvent();
 	}
 
-	//private void FixedUpdate()
 	private void Update()
 	{
 		bool wasGrounded = m_Grounded;
 		m_Grounded = false;
-
-		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
 
 		if (Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_WhatIsGround))
 		{
@@ -77,20 +73,16 @@ public class CharacterController2D : MonoBehaviour
 	public void Move(bool crouch, bool jump)
 	{
 
-		// If crouching, check to see if the character can stand up
+		
 		if (!crouch && m_wasCrouching)
 		{
-			// If the character has a ceiling preventing them from standing up, keep them crouching
 			if (hasCeiling)
 				crouch = true;
-
 		}
 
-		//only control the player if grounded or airControl is turned on
 		if (m_Grounded)
 		{
 
-			// If crouching
 			if (crouch)
 			{
 				if (!m_wasCrouching)
@@ -99,14 +91,11 @@ public class CharacterController2D : MonoBehaviour
 					OnCrouchEvent.Invoke(true);
 				}
 
-
-				// Disable one of the colliders when crouching
 				if (m_CrouchDisableCollider != null)
 					m_CrouchDisableCollider.enabled = false;
 			}
 			else
 			{
-				// Enable the collider when not crouching
 				if (m_CrouchDisableCollider != null)
 					m_CrouchDisableCollider.enabled = true;
 
@@ -119,10 +108,8 @@ public class CharacterController2D : MonoBehaviour
 
 
 		}
-		// If the player should jump...
 		if (m_Grounded && jump && !hasCeiling)
 		{
-			// Add a vertical force to the player.
 			m_Grounded = false;
 			OnLandEvent.Invoke(true);
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
