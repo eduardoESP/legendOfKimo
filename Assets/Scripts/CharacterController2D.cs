@@ -44,6 +44,10 @@ public class CharacterController2D : MonoBehaviour
 
 	private void Update()
 	{
+
+		if (GameController.controler.state != GameController.STATES.RUNNING)
+			return;
+
 		bool wasGrounded = m_Grounded;
 		m_Grounded = false;
 
@@ -72,7 +76,6 @@ public class CharacterController2D : MonoBehaviour
 
 	public void Move(bool crouch, bool jump)
 	{
-
 		
 		if (!crouch && m_wasCrouching)
 		{

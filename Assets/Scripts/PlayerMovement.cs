@@ -18,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (GameController.controler.state != GameController.STATES.RUNNING)
+			return;
 
 		horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 

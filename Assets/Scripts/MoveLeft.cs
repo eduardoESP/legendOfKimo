@@ -13,6 +13,7 @@ public class MoveLeft : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+
 		transform.position = new Vector2(transform.position.x + moveSpeed * Time.deltaTime,
 			transform.position.y);
 

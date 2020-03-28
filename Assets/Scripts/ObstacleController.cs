@@ -27,6 +27,10 @@ public class ObstacleController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (GameController.controler.state == GameController.STATES.RESET)
+		{
+			Destroy(gameObject);
+		}
 
 		transform.position = new Vector2(transform.position.x + moveSpeed * Time.deltaTime,
 			transform.position.y);
@@ -42,4 +46,5 @@ public class ObstacleController : MonoBehaviour
 			GameController.controler.PlayerHit();
 		Debug.Log("Hit");
 	}
+
 }
