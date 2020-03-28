@@ -1,4 +1,4 @@
-# legendOfKimo
+# legend Of Kimo
 silly project to learn game development in my spare time
 
 
