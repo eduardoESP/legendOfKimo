@@ -1,4 +1,18 @@
-﻿using System.Collections;
+﻿/**
+ * @file   SaveSystem.cs
+ * 
+ * @authors  Eduardo S Pino, Brackeys
+ * 
+ * @version 1.0
+ * @date 29/03/2020 (DD/MM/YYYY)
+ *
+ * This component is based on Brackeys Save and Load tutorial.
+ * Implements functions to save and load playe score
+ * 
+ */
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

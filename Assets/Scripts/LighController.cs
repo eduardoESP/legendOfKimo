@@ -1,4 +1,17 @@
-﻿using System.Collections;
+﻿/**
+ * @file   LightController.cs
+ * 
+ * @authors  Eduardo S Pino
+ * 
+ * @version 1.0
+ * @date 29/03/2020 (DD/MM/YYYY)
+ *
+ * Controls ambient light.
+ * 
+ */
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,6 +35,12 @@ public class LighController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (GameController.controler.state == GameController.STATES.PAUSE)
+        {
+            return;
+        }
+
         if (GameController.controler.state == GameController.STATES.INTRO)
         {
             lightIntensity = 0.1f; 

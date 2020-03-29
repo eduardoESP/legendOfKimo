@@ -1,4 +1,17 @@
-﻿using System.Collections;
+﻿/**
+ * @file   GameController.cs
+ * 
+ * @author  Eduardo S Pino
+ * 
+ * @version 1.0
+ * @date 29/03/2020 (DD/MM/YYYY)
+ *
+ * This component implements the game finite state machine and helper functions to
+ * keep score, save game etc..
+ */
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -14,7 +27,6 @@ public class GameController : MonoBehaviour
     float t = 0;
     float nextScoreIncrease = 0f;
     int playerScore = 0;
-
     int highestScore = 0;
 
     [SerializeField]  float spawnRate = 1f;
@@ -25,20 +37,23 @@ public class GameController : MonoBehaviour
     [SerializeField] Text HigherScoreText;
     [SerializeField] Text GameOverText;
     [SerializeField] Text SkipIntroText;
+    [SerializeField] Text RestartText;
     [SerializeField] SoundtrackController soundController;
-
     [SerializeField] Transform spawnPoint;
 
 
-    public enum MODE { EASY, HARD }; //to be used in the future!
-    public MODE gameMode;
+    public enum DIFFICULTY { EASY, HARD }; //In the future i might include difficulty, so i'll just leave it here
+    public DIFFICULTY gameDifficulty;
 
-    public enum STATES { INTRO, RUNNING, PAUSE, GAMEOVER, RESET};
+    public enum STATES { INTRO, RUNNING, PAUSE, GAMEOVER, RESET}; //game states
     [SerializeField] public STATES state;
+    private STATES previousState;
 
     // Start is called before the first frame update
     void Start()
     {
+        RestartText.text = "";
+        GameOverText.text = "";
 
         if (controler == null)
             controler = this;
@@ -54,7 +69,6 @@ public class GameController : MonoBehaviour
 
 
         state = STATES.INTRO;
-        gameMode = MODE.EASY;
         soundController.PlayIntro();
     }
 
@@ -62,6 +76,8 @@ public class GameController : MonoBehaviour
     void Update()
     {
         FSM();
+        CheckQuitGame();
+        CheckPauseGame();
     }
 
     public void PlayerHit()
@@ -104,15 +120,47 @@ public class GameController : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    void CheckPauseGame() //this should probably be redesign to use events instead
+    {
+        if (Input.GetButtonDown("Pause"))
+        {
+            if (state != STATES.PAUSE)
+            {
+                previousState = state;
+                player.animator.SetBool("GameRunning", false);
+                state = STATES.PAUSE;
+                soundController.PauseSoundtrack();
+                player.FreezePlayer();
+            }
+            else
+            {
+                state = previousState;
+                soundController.ResumeSoundtrack();
+                player.UnFreezePlayer();
+                player.OnCrouching(false);
+            }
+        }
+
+    }
+
+    void CheckQuitGame() //this should probably be redesign to use events instead
+    {
+        if (Input.GetButtonDown("QuitGame"))
+        {
+            Application.Quit();
+        }
+    }
+
     public int GetHighestScore()
     {
         return highestScore;
     }
+
     void FSM()
     {
         switch(state)
         {
-            case STATES.INTRO: //New Game / Intro
+            case STATES.INTRO:
                 player.animator.SetBool("GameRunning", true);
                 CheckIntro();
 
@@ -123,10 +171,10 @@ public class GameController : MonoBehaviour
                     state = STATES.RUNNING;
                     SkipIntroText.text = "";
                 }
-
+                
                 break;
-            case STATES.RUNNING: //Game
-
+            case STATES.RUNNING:
+                SkipIntroText.text = "";
                 player.animator.SetBool("GameRunning", true);
                 if (Time.time > nextSpawn)
                     SpawnObstacle();
@@ -137,35 +185,32 @@ public class GameController : MonoBehaviour
                     Time.timeScale += 0.1f;
                 }
                 updateScore();
-
                 break;
-            case STATES.PAUSE: //
+
+            case STATES.PAUSE:
                 player.animator.SetBool("GameRunning", false);
                 break;
+
             case STATES.GAMEOVER:
                 player.animator.SetBool("GameRunning", false);
                 Light playerLight =  player.gameObject.GetComponentInChildren<Light>();
                 Color lerpedColor = Color.Lerp(Color.white, Color.red, t);
                 t += 0.005f;
                 playerLight.color = lerpedColor;
-                //playerLight.color = Color.red;
 
                 GameOverText.text = "GAME OVER";
                 if (playerScore > highestScore)
                     highestScore = playerScore;
 
                 HigherScoreText.text = "Highest Score:" + highestScore;
-
                 SaveGame.SaveScore();
 
-                if (Input.GetButtonDown("Reset"))
-                {
+                RestartText.text = "Press 'r' to Restart";
+                if (Input.GetButtonDown("Reset")) //this should probably be redesign to use events instead
                     state = STATES.RESET;
-                }
-
+            
                 break;
             case STATES.RESET: //
-                player.animator.SetBool("GameRunning", false);
                 ResetGame();
                
                 break;

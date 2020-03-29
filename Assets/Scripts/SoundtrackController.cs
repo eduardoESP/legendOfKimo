@@ -1,4 +1,16 @@
-﻿using System.Collections;
+﻿/**
+ * @file   SoundtrackController.cs
+ * 
+ * @authors  Eduardo S Pino
+ * 
+ * @version 1.0
+ * @date 29/03/2020 (DD/MM/YYYY)
+ *
+ * Controls soundtrack and provides helper function to pause and resume the current track.
+ * 
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +30,10 @@ public class SoundtrackController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameController.controler.state == GameController.STATES.PAUSE)
+        {
+            return;
+        }
 
         if (GameController.controler.state == GameController.STATES.RUNNING)
         {
@@ -68,13 +84,25 @@ public class SoundtrackController : MonoBehaviour
 
     public void StartSoundtrack(string path)
     {
+        StopSoundtrack();
         var audioClip = Resources.Load<AudioClip>(path);
-        audioSource.PlayOneShot(audioClip);
+        audioSource.clip = audioClip;
+        audioSource.Play();
 
     }
     public void StopSoundtrack()
     {
+       
         audioSource.Stop();
     }
 
+    public void PauseSoundtrack()
+    {
+        audioSource.Pause();
+    }
+
+    public void ResumeSoundtrack()
+    {
+        audioSource.Play();
+    }
 }

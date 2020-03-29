@@ -1,4 +1,17 @@
-﻿
+﻿/**
+ * @file   CharacterController2D.cs
+ * 
+ * @authors  Eduardo S Pino, Brackeys
+ * 
+ * @version 1.0
+ * @date 29/03/2020 (DD/MM/YYYY)
+ *
+ * This component is a repurposed CharacterController2D from Brackeys with minor changes by me.
+ * It implements the character move function and checks if character has a ceiling over his head
+ * or ground below his feet.
+ * 
+ */
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -46,7 +59,9 @@ public class CharacterController2D : MonoBehaviour
 	{
 
 		if (GameController.controler.state != GameController.STATES.RUNNING)
+		{
 			return;
+		}
 
 		bool wasGrounded = m_Grounded;
 		m_Grounded = false;
@@ -118,4 +133,10 @@ public class CharacterController2D : MonoBehaviour
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
 		}
 	}
+
+	public Rigidbody2D GetRigidBody2D()
+	{
+		return  m_Rigidbody2D;
+	}
+
 }

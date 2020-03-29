@@ -1,4 +1,18 @@
-﻿using System.Collections;
+﻿/**
+ * @file   ObstacleController.cs
+ * 
+ * @authors  Eduardo S Pino, Alexander Zotov
+ * 
+ * @version 1.0
+ * @date 29/03/2020 (DD/MM/YYYY)
+ *
+ * This component is a repurposed ObstacleController.cs from Zotov's T-Rex Run Game for Android.
+ * It just moves the obstacles to the left and destroys them after they move past the camera
+ * 
+ */
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +41,11 @@ public class ObstacleController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (GameController.controler.state == GameController.STATES.PAUSE)
+		{
+			return;
+		}
+
 		if (GameController.controler.state == GameController.STATES.RESET)
 		{
 			Destroy(gameObject);
@@ -44,7 +63,7 @@ public class ObstacleController : MonoBehaviour
 	{
 		if (col.gameObject.name.Equals("Player"))
 			GameController.controler.PlayerHit();
-		Debug.Log("Hit");
+
 	}
 
 }
