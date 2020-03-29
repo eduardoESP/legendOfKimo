@@ -29,6 +29,11 @@ public class PlayerMovement : MonoBehaviour
 	bool crouch = false;
 
 
+	private void Start()
+	{
+		GameController.pauseEvent += PauseEventHndlr;
+	}
+
 	// Update is called once per frame
 	void Update()
 	{
@@ -84,4 +89,19 @@ public class PlayerMovement : MonoBehaviour
 		controller.GetRigidBody2D().constraints = RigidbodyConstraints2D.None;
 		controller.GetRigidBody2D().constraints = RigidbodyConstraints2D.FreezeRotation;
 	}
+
+	void PauseEventHndlr(GameController.STATES state)
+	{
+		if (state != GameController.STATES.PAUSE)
+		{
+			animator.SetBool("GameRunning", false);
+			FreezePlayer();
+		}
+		else
+		{
+			UnFreezePlayer();
+			OnCrouching(false);
+		}
+	}
+
 }

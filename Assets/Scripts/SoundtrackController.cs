@@ -24,7 +24,7 @@ public class SoundtrackController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        GameController.pauseEvent += PauseEventHndlr;
     }
 
     // Update is called once per frame
@@ -99,6 +99,14 @@ public class SoundtrackController : MonoBehaviour
     public void PauseSoundtrack()
     {
         audioSource.Pause();
+    }
+
+    void PauseEventHndlr(GameController.STATES state)
+    {
+        if (state != GameController.STATES.PAUSE)
+            audioSource.Pause();
+        else
+            audioSource.Play();
     }
 
     public void ResumeSoundtrack()

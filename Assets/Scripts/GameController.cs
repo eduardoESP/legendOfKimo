@@ -3,7 +3,7 @@
  * 
  * @author  Eduardo S Pino
  * 
- * @version 1.0
+ * @version 1.5
  * @date 29/03/2020 (DD/MM/YYYY)
  *
  * This component implements the game finite state machine and helper functions to
@@ -40,6 +40,12 @@ public class GameController : MonoBehaviour
     [SerializeField] Text RestartText;
     [SerializeField] SoundtrackController soundController;
     [SerializeField] Transform spawnPoint;
+
+
+    public delegate void EventHandler(STATES state);
+    public static event EventHandler pauseEvent;
+
+
 
 
     public enum DIFFICULTY { EASY, HARD }; //In the future i might include difficulty, so i'll just leave it here
@@ -120,30 +126,23 @@ public class GameController : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    void CheckPauseGame() //this should probably be redesign to use events instead
+    public void CheckPauseGame() 
     {
         if (Input.GetButtonDown("Pause"))
         {
+            pauseEvent?.Invoke(state);
             if (state != STATES.PAUSE)
             {
                 previousState = state;
-                player.animator.SetBool("GameRunning", false);
                 state = STATES.PAUSE;
-                soundController.PauseSoundtrack();
-                player.FreezePlayer();
             }
             else
-            {
                 state = previousState;
-                soundController.ResumeSoundtrack();
-                player.UnFreezePlayer();
-                player.OnCrouching(false);
-            }
         }
 
     }
 
-    void CheckQuitGame() //this should probably be redesign to use events instead
+    void CheckQuitGame()
     {
         if (Input.GetButtonDown("QuitGame"))
         {
@@ -206,7 +205,7 @@ public class GameController : MonoBehaviour
                 SaveGame.SaveScore();
 
                 RestartText.text = "Press 'r' to Restart";
-                if (Input.GetButtonDown("Reset")) //this should probably be redesign to use events instead
+                if (Input.GetButtonDown("Reset"))
                     state = STATES.RESET;
             
                 break;
